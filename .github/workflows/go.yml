@@ -40,7 +40,7 @@ jobs:
             cache-${{ runner.os }}
 
       - name: execute py script
-        run: python tvguide2xmltv.py  --api --platform sky --region london --now --now-days=1 -v --cache-ttl 86400 --output epg.xml
+        run: python tvguide2xmltv.py  --api --platform sky --region london --now --now-days=3 -v --cache-ttl 86400 --output epg.xml
 
       - name: commit files
         run: |
