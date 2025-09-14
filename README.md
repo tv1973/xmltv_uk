@@ -31,27 +31,42 @@ pip install -r requirements.txt
 
 #### Convert from JSON file:
 ```bash
-python tvguide2xmltv.py input.json output.xml
+python tvguide2xmltv.py --input input.json --output output.xml
 ```
 
 #### Fetch from TV Guide API:
 ```bash
-python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --hour 21 output.xml
+python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --hour 21 --output output.xml
 ```
 
 #### Fetch multiple hours from TV Guide API:
 ```bash
-python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --start-hour 18 --end-hour 23 output.xml
+python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --start-hour 18 --end-hour 23 --output output.xml
 ```
 
 #### Fetch multiple days from TV Guide API:
 ```bash
-python tvguide2xmltv.py --api --platform sky --region london --start-date 2025-01-15 --end-date 2025-01-17 --start-hour 18 --end-hour 23 output.xml
+python tvguide2xmltv.py --api --platform sky --region london --start-date 2025-01-15 --end-date 2025-01-17 --start-hour 18 --end-hour 23 --output output.xml
+```
+
+#### Fetch from "now" (last hour to next 7 days):
+```bash
+python tvguide2xmltv.py --api --platform sky --region london --now --output output.xml
+```
+
+#### Fetch from "now" with custom duration:
+```bash
+python tvguide2xmltv.py --api --platform sky --region london --now --now-days 3 --output output.xml
 ```
 
 #### Options:
-- `-v, --verbose`: Enable verbose output
+
+**Input/Output:**
+- `--input`: Input JSON file path
+- `--output`: Output XMLTV file path
 - `--api`: Fetch data from TV Guide API instead of reading file
+
+**API Parameters:**
 - `--platform`: TV platform (sky, freeview, etc.)
 - `--region`: Geographic region (london, manchester, etc.)
 - `--date`: Date in YYYY-MM-DD format (for single day)
@@ -60,40 +75,53 @@ python tvguide2xmltv.py --api --platform sky --region london --start-date 2025-0
 - `--hour`: Hour in 24-hour format (0-23)
 - `--start-hour`: Starting hour for fetch (0-23)
 - `--end-hour`: Ending hour for fetch (0-23)
+- `--now`: Fetch guide from (now - 1 hour) to (now + 7 days)
+- `--now-days`: Number of days to fetch in --now mode (default: 7)
 - `--view`: Display format (default: grid)
 - `--details`: Include additional programme details
-- `--timeout`: API request timeout in seconds (default: 30)
-- `--retries`: Maximum API retry attempts (default: 3)
+
+**Cache Options:**
 - `--cache-ttl`: Cache time-to-live in seconds (default: 3600)
 - `--no-cache`: Disable cache usage
 - `--cache-only`: Only use cached data, do not make API calls
 - `--clear-cache`: Clear all cached data and exit
 - `--cache-stats`: Show cache statistics and exit
+
+**General Options:**
+- `-v, --verbose`: Enable verbose output
+- `--timeout`: API request timeout in seconds (default: 30)
+- `--retries`: Maximum API retry attempts (default: 3)
 - `-h, --help`: Show help message
 
 ### Examples
 
 ```bash
 # Convert from file
-python tvguide2xmltv.py test_sample.json tv_guide.xml -v
+python tvguide2xmltv.py --input test_sample.json --output tv_guide.xml -v
 
 # Fetch single hour from Sky (uses cache)
-python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --hour 21 output.xml -v
+python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --hour 21 --output output.xml -v
 
 # Fetch evening listings from Sky (6 PM to 11 PM)
-python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --start-hour 18 --end-hour 23 output.xml -v
+python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --start-hour 18 --end-hour 23 --output output.xml -v
 
 # Fetch multiple days from Sky (3 days, evening hours)
-python tvguide2xmltv.py --api --platform sky --region london --start-date 2025-01-15 --end-date 2025-01-17 --start-hour 18 --end-hour 23 output.xml -v
+python tvguide2xmltv.py --api --platform sky --region london --start-date 2025-01-15 --end-date 2025-01-17 --start-hour 18 --end-hour 23 --output output.xml -v
+
+# Fetch from "now" (last hour to next 7 days)
+python tvguide2xmltv.py --api --platform sky --region london --now --output output.xml -v
+
+# Fetch from "now" with custom duration (3 days)
+python tvguide2xmltv.py --api --platform sky --region london --now --now-days 3 --output output.xml -v
 
 # Fetch with custom cache TTL (2 hours)
-python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --hour 21 --cache-ttl 7200 output.xml
+python tvguide2xmltv.py --api --platform sky --region london --date 2025-01-15 --hour 21 --cache-ttl 7200 --output output.xml
 
 # Use only cached data (offline mode)
-python tvguide2xmltv.py --api --cache-only --platform sky --region london --date 2025-01-15 --hour 21 output.xml
+python tvguide2xmltv.py --api --cache-only --platform sky --region london --date 2025-01-15 --hour 21 --output output.xml
 
 # Disable cache entirely
-python tvguide2xmltv.py --api --no-cache --platform freeview --region manchester --date 2025-01-16 --hour 19 guide.xml
+python tvguide2xmltv.py --api --no-cache --platform freeview --region manchester --date 2025-01-16 --hour 19 --output guide.xml
 
 # Cache management
 python tvguide2xmltv.py --cache-stats
